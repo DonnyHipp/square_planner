@@ -1,3 +1,7 @@
 
 back/.DS_Store
 .DS_Store
+*/__pycache__/*
+back/src/api/auth/__pycache__/router.cpython-311.pyc
+back/.vscode
+back/.env
