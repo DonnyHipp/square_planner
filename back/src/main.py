@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 
 from api.auth.router import router as authrouter
-from api.tasks.router import router as taskrouter
 from fastapi.middleware.cors import CORSMiddleware
 
 origins = [
@@ -22,6 +21,8 @@ app.add_middleware(
 )
 
 
-routes = [authrouter, taskrouter]
+routes = [
+    authrouter,
+]
 for rout in routes:
     app.include_router(rout)

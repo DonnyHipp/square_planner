@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     PYTHONUNBUFFERED: str
     JWT_EXPIRE: str
     JWT_ALGORITHM: str
+    JWT_SECRET_KEY: str
 
     class Config:
         BASE_DIR = Path(__file__).resolve().parent.parent.parent
