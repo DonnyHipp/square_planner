@@ -17,7 +17,7 @@ class PasswordProtocol(Protocol):
         raise NotImplementedError
 
 
-class PasswordHasher(PasswordProtocol):
+class PasswordManager(PasswordProtocol):
     def __init__(self) -> None:
         self.context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -26,11 +26,14 @@ class PasswordHasher(PasswordProtocol):
     ) -> Tuple[bool, str]:
         return self.context.verify_and_update(plain_password, hashed_password)
 
+    def string_security_check(self, password):
+        True
+
     def hash(self, password: str) -> str:
         return self.context.hash(password)
 
     def generate(self) -> str:
-        return pwd.genword()
+        return pwd.genword(length=12)
 
 
-password_hasher = PasswordHasher()
+password_manager = PasswordManager()

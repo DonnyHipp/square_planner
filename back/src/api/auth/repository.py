@@ -1,13 +1,23 @@
 import uuid
+from typing import Protocol
+
+from api.auth import exceptions, models, schemas
+from api.auth.password import password_manager
 from sqlalchemy import select
-from api.auth import models
-from src.configs.db import async_session_maker
-from api.auth.password import password_hasher
+
+from configs.db import async_session_maker
 
 
-class UserRepository:
-    def __init__(self, session: async_session_maker):
-        self._session = session
+class UserAbstractRepository(Protocol):
+
+    async def get_user(self):
+        raise NotImplementedError
+
+    async def create_user(self):
+        raise NotImplementedError
+
+
+class UserRepository(UserAbstractRepository):
 
     async def get_user(
         self,
@@ -21,26 +31,33 @@ class UserRepository:
             filters.append(models.User.email == email)
 
         stmt = select(models.User).where(*filters)
-        result = await self.session.execute(stmt)
-        user = result.unique().scalar_one_or_none()
 
+        async with async_session_maker() as session:
+            result = await session.execute(stmt)
+            user = result.unique().scalar_one_or_none()
         return user
 
-    async def create_user(
-        self,
-        email: str,
-        password: str,
-        first_name: str | None = None,
-        last_name: str | None = None,
-    ) -> models.User:
-        password_hash = password_hasher(password)
+    async def create_user(self, user: schemas.BaseUserCreate) -> models.User:
+
+        if await self.get_user(email=user.email):
+            raise exceptions.UserAlreadyExists()
+
+        if password_manager.string_security_check:
+            password_hash = password_manager.hash(user.password)
+        else:
+            raise exceptions.WeekPassword
+
         user = models.User(
-            email=email,
-            first_name=first_name,
-            last_name=last_name,
-            password=password_hash,
+            email=user.email,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            hashed_password=password_hash,
         )
-        with async_session_maker as session:
-            await session.add(user)
 
+        async with async_session_maker() as session:
+            session.add(user)
+            await session.commit()
         return user
+
+    async def verify_user_password(self, user: models.User, password: str) -> bool:
+        return password_manager.verify_and_update(password, user.hashed_password)[0]

@@ -15,13 +15,17 @@ class BaseUser(BaseModel):
         orm_mode = True
 
 
+class LoginUser(BaseModel):
+    email: EmailStr
+    password: str
+
+
 class BaseUserCreate(BaseModel):
     email: EmailStr
     password: str
     first_name: Optional[str]
     last_name: Optional[str]
     is_activated: Optional[bool] = True
-    is_superuser: Optional[bool] = False
 
 
 class BaseUserUpdate(BaseModel):

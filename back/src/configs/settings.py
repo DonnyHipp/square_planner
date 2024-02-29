@@ -17,7 +17,8 @@ class Settings(BaseSettings):
     DEBUG_MODE: bool
     PYTHONDONTWRITEBYTECODE: str
     PYTHONUNBUFFERED: str
-    JWT_EXPIRE: str
+    JWT_ACCESS_LIFETIME: str
+    JWT_REFRESH_LIFETIME: str
     JWT_ALGORITHM: str
     JWT_SECRET_KEY: str
 
