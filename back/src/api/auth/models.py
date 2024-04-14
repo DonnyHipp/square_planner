@@ -1,7 +1,7 @@
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from configs.db import TimestampUUIDMixin, Base
+from src.configs.db import TimestampUUIDMixin, Base
 
 # from src.configs.db import Base, TimestampUUIDMixin
 

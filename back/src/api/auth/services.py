@@ -1,8 +1,13 @@
 import uuid
 from typing import Protocol
 
-from api.auth import models, repository, schemas
+from jose import jwt, JWTError
 from fastapi import HTTPException
+
+from src.api.auth import models, repository, schemas
+from src.api.auth.exceptions import credentials_exception
+from src.api.auth.jwt_token import TokenData
+from src.configs import settings
 
 
 class UserServiceProtocol(Protocol):
@@ -10,7 +15,7 @@ class UserServiceProtocol(Protocol):
     async def registry_user(self):
         raise NotImplementedError
 
-    async def login_user(self):
+    async def login_user(self, user):
         raise NotImplementedError
 
     async def update_user(self):
@@ -35,4 +40,18 @@ class UserService(UserServiceProtocol):
         verify = await self.repository.verify_user_password(user, password)
         if not verify:
             raise HTTPException(status_code=400, detail="Incorrect password")
+        return user
+
+    async def get_user_from_jwt(self, token: str):
+        try:
+            payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
+            username: str = payload.get("sub")
+            if username is None:
+                raise credentials_exception
+            token_data = TokenData(username=username)
+        except JWTError:
+            raise credentials_exception
+        user = self.repository.get_user(email=token_data.usermail)
+        if user is None:
+            raise credentials_exception
         return user

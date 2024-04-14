@@ -1,51 +1,42 @@
-from typing import Any, Dict, List, Optional
+from datetime import datetime, timezone, timedelta
 
-from datetime import datetime, timedelta
+from jose import jwt
+from pydantic import BaseModel
 
-import jwt
+from src.api.auth.password import password_manager
+from src.configs import settings
 
-from configs.settings import settings
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 
-print(settings.JWT_REFRESH_LIFETIME)
+
+class TokenData(BaseModel):
+    username: str | None = None
 
 
-class JWT:
+def verify_user_password(self, plain_password, password: str) -> bool:
+    return password_manager.verify(password, plain_password)
 
-    lifetime_access: str = settings.JWT_REFRESH_LIFETIME
-    lifetime_access: str = settings.JWT_ACCESS_LIFETIME
-    secret: str = settings.JWT_SECRET_KEY
-    algorithm: str = settings.JWT_ALGORITHM
 
-    def encode_jwt(
-        self, data: dict, lifetime_minutes: Optional[int] = None, token_type: str = None
-    ) -> str:
-        payload = {"data": data}
-        if lifetime_minutes:
-            expire = datetime.utcnow() + timedelta(minutes=lifetime_minutes)
-            payload["exp"] = expire
-        if token_type:
-            payload["type"] = token_type
-        else:
-            payload["type"] = "access"
+def get_password_hash(password):
+    return password_manager.hash(password)
 
-        return jwt.encode(payload, self.secret, algorithm=self.algorithm)
 
-    def decode_jwt(
-        self,
-        encoded_jwt: str,
-    ) -> Dict[str, Any]:
-        return jwt.decode(
-            encoded_jwt,
-            self.secret,
-            algorithms=self.algorithm,
-        )
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.now(timezone.utc) + expires_delta
+    else:
+        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
+    return encoded_jwt
 
-    def generate_two_tokens(
-        self,
-        data: dict,
-    ) -> str:
 
-        return (
-            self.encode_jwt(token_type="access", data=data),
-            self.encode_jwt(token_type="refresh", data=data),
-        )
+def create_token(user_name: str):
+    access_token_expires = timedelta(minutes=settings.JWT_ACCESS_LIFETIME)
+    access_token = create_access_token(
+        data={"sub": user_name}, expires_delta=access_token_expires
+    )
+    return Token(access_token=access_token, token_type="bearer")

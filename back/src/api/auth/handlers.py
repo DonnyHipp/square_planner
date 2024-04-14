@@ -1,35 +1,50 @@
 from http import HTTPStatus
+from typing import Annotated
 
-from fastapi import Response
-from fastapi.exceptions import HTTPException
+from fastapi import status, HTTPException, Depends
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
-from api.auth import schemas, exceptions, dependencies
+from src.api.auth import schemas, exceptions, dependencies
+from src.api.auth.jwt_token import Token, create_token
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-async def register(user: schemas.BaseUserCreate):
+async def register(user: schemas.LoginUser):
     try:
         user = await dependencies.user_service.registry_user(user)
-        return user
+        return schemas.LoginUser(user)
     except exceptions.UserAlreadyExists:
         return HTTPException(
             status_code=404, detail="User with this email already exists"
         )
 
 
-async def login(response: Response, user: schemas.LoginUser):
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+    try:
+        user = dependencies.user_service.get_user_from_jwt(token)
+    except Exception:
+        raise exceptions.credentials_exception
+    return user
 
-    active_user = await dependencies.user_service.login_user(
-        user.password,
-        user.email,
-    )
-    if not active_user:
+
+async def login_for_access_token(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+) -> Token:
+    user = dependencies.login(form_data.username, form_data.password)
+    if not user:
         raise HTTPException(
-            status_code=HTTPStatus.UNAUTHORIZED,
-            detail="Неверные имя пользователя или пароль",
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    access_token, refresh_token = dependencies.set_tokens({"sub": user.email}, response)
-    return {"access_token": access_token, "token_type": "bearer"}
+    return create_token(user.email)
+
+
+async def read_user(
+    current_user: Annotated[schemas.BaseUser, Depends(get_current_user)],
+):
+    return current_user
 
 
 def logout():

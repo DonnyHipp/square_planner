@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from api.auth.router import router as authrouter
+from src.api.auth.router import router as authrouter
 from fastapi.middleware.cors import CORSMiddleware
 
 origins = [
@@ -10,8 +10,7 @@ origins = [
     "http://localhost:5173",
 ]
 
-
-app = FastAPI(title="SQRTapp")
+app = FastAPI(title="PDCA")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,

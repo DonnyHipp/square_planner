@@ -1,11 +1,11 @@
 import uuid
 from typing import Protocol
 
-from api.auth import exceptions, models, schemas
-from api.auth.password import password_manager
+from src.api.auth import exceptions, models, schemas
+from src.api.auth.password import password_manager
 from sqlalchemy import select
 
-from configs.db import async_session_maker
+from src.configs.db import async_session_maker
 
 
 class UserAbstractRepository(Protocol):
@@ -14,6 +14,9 @@ class UserAbstractRepository(Protocol):
         raise NotImplementedError
 
     async def create_user(self):
+        raise NotImplementedError
+
+    async def verify_user_password(self):
         raise NotImplementedError
 
 
@@ -59,5 +62,4 @@ class UserRepository(UserAbstractRepository):
             await session.commit()
         return user
 
-    async def verify_user_password(self, user: models.User, password: str) -> bool:
-        return password_manager.verify_and_update(password, user.hashed_password)[0]
+

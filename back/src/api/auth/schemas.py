@@ -20,17 +20,16 @@ class LoginUser(BaseModel):
     password: str
 
 
-class BaseUserCreate(BaseModel):
-    email: EmailStr
-    password: str
-    first_name: Optional[str]
-    last_name: Optional[str]
-    is_activated: Optional[bool] = True
+class UserInDB(BaseUser):
+    hashed_password: str
 
 
 class BaseUserUpdate(BaseModel):
-    password: Optional[str] = None
     email: Optional[EmailStr] = None
     is_active: Optional[bool] = None
     is_superuser: Optional[bool] = None
     is_verified: Optional[bool] = None
+
+
+class BaseUserCreate:
+    pass
