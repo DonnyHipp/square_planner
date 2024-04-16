@@ -91,7 +91,7 @@ celerybeat.pid
 
 *.sage.py
 
-.env
+back/.env
 .venv
 env/
 venv/
@@ -115,3 +115,4 @@ dmypy.json
 .pytype/
 
 cython_debug/
+/postgres-data-dev/

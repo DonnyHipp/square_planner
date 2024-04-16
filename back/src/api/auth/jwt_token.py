@@ -4,7 +4,7 @@ from jose import jwt
 from pydantic import BaseModel
 
 from src.api.auth.password import password_manager
-from src.configs import settings
+from src.configs.settings import settings
 
 class Token(BaseModel):
     access_token: str
@@ -13,10 +13,6 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: str | None = None
-
-
-def verify_user_password(self, plain_password, password: str) -> bool:
-    return password_manager.verify(password, plain_password)
 
 
 def get_password_hash(password):

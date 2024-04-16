@@ -6,8 +6,7 @@ from fastapi import HTTPException
 
 from src.api.auth import models, repository, schemas
 from src.api.auth.exceptions import credentials_exception
-from src.api.auth.jwt_token import TokenData
-from src.configs import settings
+from src.configs.settings import settings
 
 
 class UserServiceProtocol(Protocol):
@@ -30,7 +29,7 @@ class UserService(UserServiceProtocol):
     def __init__(self, repository: repository.UserAbstractRepository) -> None:
         self.repository = repository
 
-    async def registry_user(self, user: schemas.BaseUserCreate) -> models.User:
+    async def registry_user(self, user: schemas.UserCreate) -> models.User:
         return await self.repository.create_user(user)
 
     async def login_user(self, password: str, email: str | None = None):
@@ -48,10 +47,9 @@ class UserService(UserServiceProtocol):
             username: str = payload.get("sub")
             if username is None:
                 raise credentials_exception
-            token_data = TokenData(username=username)
         except JWTError:
             raise credentials_exception
-        user = self.repository.get_user(email=token_data.usermail)
+        user = await self.repository.get_user(email=username)
         if user is None:
             raise credentials_exception
         return user

@@ -1,18 +1,26 @@
-FROM python:3.9-slim
+FROM python:3.12-slim-bullseye as base
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONFAULTHANDLER=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONHASHSEED=random \
+    PYTHONDONTWRITEBYTECODE=1 \
+    # pip:
+    PIP_NO_CACHE_DIR=off \
+    PIP_DISABLE_PIP_VERSION_CHECK=on \
+    PIP_DEFAULT_TIMEOUT=100 \
+    # poetry:
+    POETRY_VERSION=1.7.1 \
+    POETRY_NO_INTERACTION=1 \
+    POETRY_CACHE_DIR='/var/cache/pypoetry' \
+    PATH="$PATH:/root/.local/bin"
 
-WORKDIR /src
+WORKDIR /back
+ENV PYTHONDONTWRITEBYTECODE=1\
+    PYTHONUNBUFFERED=1
+COPY . .
 
-# Копируем зависимости в контейнер
-COPY requirements.txt /src/
+RUN pip install poetry
+RUN poetry config virtualenvs.create false && poetry install --no-dev --no-interaction --no-ansi
 
-# Устанавливаем зависимости
-RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем все остальные файлы проекта в контейнер
-COPY . /src/
-
-# Запускаем FastAPI приложение
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+EXPOSE 8000

@@ -1,4 +1,5 @@
 import uuid
+from abc import ABC
 from typing import Protocol
 
 from src.api.auth import exceptions, models, schemas
@@ -8,12 +9,15 @@ from sqlalchemy import select
 from src.configs.db import async_session_maker
 
 
-class UserAbstractRepository(Protocol):
+class UserAbstractRepository(ABC):
 
     async def get_user(self):
         raise NotImplementedError
 
     async def create_user(self):
+        raise NotImplementedError
+
+    async def verify_user_password(self):
         raise NotImplementedError
 
     async def verify_user_password(self):
@@ -40,20 +44,15 @@ class UserRepository(UserAbstractRepository):
             user = result.unique().scalar_one_or_none()
         return user
 
-    async def create_user(self, user: schemas.BaseUserCreate) -> models.User:
+    async def create_user(self, user: schemas.UserCreate) -> models.User:
 
         if await self.get_user(email=user.email):
             raise exceptions.UserAlreadyExists()
 
-        if password_manager.string_security_check:
-            password_hash = password_manager.hash(user.password)
-        else:
-            raise exceptions.WeekPassword
+        password_hash = password_manager.hash(user.password)
 
         user = models.User(
             email=user.email,
-            first_name=user.first_name,
-            last_name=user.last_name,
             hashed_password=password_hash,
         )
 
@@ -61,5 +60,9 @@ class UserRepository(UserAbstractRepository):
             session.add(user)
             await session.commit()
         return user
+
+    async def verify_user_password(self, user: models.User, password: str) -> bool:
+        user = await self.get_user(email=user.email)
+        return password_manager.verify(password, user.hashed_password)
 
 

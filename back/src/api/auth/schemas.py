@@ -12,7 +12,7 @@ class BaseUser(BaseModel):
     is_superuser: bool = False
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class LoginUser(BaseModel):
@@ -31,5 +31,7 @@ class BaseUserUpdate(BaseModel):
     is_verified: Optional[bool] = None
 
 
-class BaseUserCreate:
-    pass
+class UserCreate(LoginUser):
+    email: EmailStr
+    password: str
+

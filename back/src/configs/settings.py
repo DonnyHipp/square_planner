@@ -5,8 +5,8 @@ from pathlib import Path
 from pydantic_settings import BaseSettings
 
 
-
 class Settings(BaseSettings):
+    DEBUG: bool
     DB_DRIVER: str
     API_VERSION: str
     APP_NAME: str
@@ -16,10 +16,9 @@ class Settings(BaseSettings):
     DB_PASSWORD: str
     DB_PORT: int
     DB_USERNAME: str
-    DEBUG_MODE: bool
     PYTHONDONTWRITEBYTECODE: str
     PYTHONUNBUFFERED: str
-    JWT_ACCESS_LIFETIME: str
+    JWT_ACCESS_LIFETIME: int
     JWT_REFRESH_LIFETIME: str
     JWT_ALGORITHM: str
     JWT_SECRET_KEY: str
@@ -27,6 +26,7 @@ class Settings(BaseSettings):
     class Config:
         BASE_DIR = Path(__file__).resolve().parent.parent.parent
         env_file = os.path.join(BASE_DIR, ".env")
+        print(env_file)
         env_file_encoding = "utf-8"
 
     @property
