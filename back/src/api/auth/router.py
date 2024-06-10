@@ -1,14 +1,13 @@
-from typing import Annotated
+import uuid
 
-from fastapi import APIRouter, Depends
-from fastapi.security import OAuth2PasswordBearer
-from pydantic import BaseModel
+from fastapi_users import FastAPIUsers
 
-from src.api.auth import handlers
-
-router = APIRouter(prefix="/user", tags=["Auth"])
+from .backend import auth_backend
+from .manager import get_user_manager
+from ...configs.db import User
 
 
-router.add_api_route(methods=["POST"], path="/register", endpoint=handlers.register)
-router.add_api_route(methods=["GET"], path="/read_user", endpoint=handlers.read_user)
-router.add_api_route(methods=["POST"], path="/token", endpoint=handlers.login_for_access_token)
+fastapi_users = FastAPIUsers[User, uuid.UUID](
+    get_user_manager,
+    [auth_backend],
+)

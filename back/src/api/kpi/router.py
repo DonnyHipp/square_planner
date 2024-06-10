@@ -3,9 +3,9 @@ from pydantic import BaseModel
 
 router = APIRouter(prefix='/task')
 
-class TestBody(BaseModel):
-    s:str
 
+class TestBody(BaseModel):
+    s: str
 
 
 @router.post("")
@@ -13,4 +13,3 @@ def get_task(body:TestBody):
     print(body.s)
     return body.s
 
-# create_engine('postgresql+asyncpg://user:password@host:port/name')

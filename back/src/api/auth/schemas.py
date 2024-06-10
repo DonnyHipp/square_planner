@@ -1,37 +1,15 @@
-from typing import Optional
-from pydantic import BaseModel, EmailStr, UUID4
 import uuid
 
-
-class BaseUser(BaseModel):
-    id: UUID4
-    email: EmailStr
-    first_name: str
-    last_name: str
-    is_active: bool = True
-    is_superuser: bool = False
-
-    class Config:
-        from_attributes = True
+from fastapi_users import schemas
 
 
-class LoginUser(BaseModel):
-    email: EmailStr
-    password: str
+class UserRead(schemas.BaseUser[uuid.UUID]):
+    pass
 
 
-class UserInDB(BaseUser):
-    hashed_password: str
+class UserCreate(schemas.BaseUserCreate):
+    pass
 
 
-class BaseUserUpdate(BaseModel):
-    email: Optional[EmailStr] = None
-    is_active: Optional[bool] = None
-    is_superuser: Optional[bool] = None
-    is_verified: Optional[bool] = None
-
-
-class UserCreate(LoginUser):
-    email: EmailStr
-    password: str
-
+class UserUpdate(schemas.BaseUserUpdate):
+    pass

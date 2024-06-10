@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 
-from src.api.auth.router import router as authrouter
+from src.api.auth.backend import auth_backend
 from fastapi.middleware.cors import CORSMiddleware
+
+from src.api.auth.router import fastapi_users
+from src.api.auth.schemas import UserRead, UserCreate, UserUpdate
 
 origins = [
     "http://localhost",
@@ -19,9 +22,33 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(
+    fastapi_users.get_auth_router(auth_backend),
+    prefix="/auth/jwt",
+    tags=["auth"],
+)
 
-routes = [
-    authrouter,
-]
-for rout in routes:
-    app.include_router(rout)
+app.include_router(
+    fastapi_users.get_register_router(UserRead, UserCreate),
+    prefix="/auth0",
+    tags=["auth"],
+)
+
+app.include_router(
+    fastapi_users.get_verify_router(UserRead),
+    prefix="/auth1",
+    tags=["auth"],
+)
+
+app.include_router(
+    fastapi_users.get_reset_password_router(),
+    prefix="/auth1",
+    tags=["auth"],
+)
+
+app.include_router(
+    fastapi_users.get_users_router(UserRead, UserUpdate),
+    prefix="/users",
+    tags=["users"],
+)
+

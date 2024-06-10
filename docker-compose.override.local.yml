@@ -45,7 +45,7 @@ services:
       PGDATA: "/var/lib/postgresql/data:cached"
 
   backend:
-    command: poetry run uvicorn src.main:app --reload
+    command: uvicorn src.main:app --reload
     env_file:
       - back/.env
     volumes:

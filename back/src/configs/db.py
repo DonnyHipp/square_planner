@@ -9,7 +9,8 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-
+from fastapi_users.db import SQLAlchemyBaseUserTableUUID, SQLAlchemyUserDatabase
+from fastapi import Depends
 from .settings import settings
 
 engine = create_async_engine(settings.database_url, echo=True, future=True)
@@ -21,6 +22,10 @@ async_session_maker = async_sessionmaker(
 
 
 class Base(DeclarativeBase):
+    pass
+
+
+class User(SQLAlchemyBaseUserTableUUID, Base):
     pass
 
 
@@ -40,3 +45,7 @@ class TimestampUUIDMixin:
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session_maker() as session:
         yield session
+
+
+async def get_user_db(session: AsyncSession = Depends(get_async_session)):
+    yield SQLAlchemyUserDatabase(session, User)

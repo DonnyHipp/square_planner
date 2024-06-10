@@ -116,3 +116,10 @@ dmypy.json
 
 cython_debug/
 /postgres-data-dev/
+/.idea/ruff.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/modules.xml
+/.idea/vcs.xml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/misc.xml
+/.idea/square_planner.iml
