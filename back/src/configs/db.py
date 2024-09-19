@@ -9,9 +9,16 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from fastapi_users.db import SQLAlchemyBaseUserTableUUID, SQLAlchemyUserDatabase
+from fastapi_users.db import (
+    SQLAlchemyBaseUserTableUUID,
+    SQLAlchemyUserDatabase,
+)
 from fastapi import Depends
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import DateTime
+
 from .settings import settings
+
 
 engine = create_async_engine(settings.database_url, echo=True, future=True)
 async_session_maker = async_sessionmaker(
@@ -25,21 +32,28 @@ class Base(DeclarativeBase):
     pass
 
 
-class User(SQLAlchemyBaseUserTableUUID, Base):
+class UserBase(Base):
     pass
 
 
-class TimestampUUIDMixin:
+class BaseDB(Base):
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
     @declared_attr
     def __tablename__(cls):
         return cls.__name__.lower()
 
-    id: Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4, primary_key=True)
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
-    updated_at: Mapped[datetime] = mapped_column(
-        default=datetime.utcnow, onupdate=datetime.utcnow
-    )
+
+class User(SQLAlchemyBaseUserTableUUID, UserBase):
+    pass
 
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:

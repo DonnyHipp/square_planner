@@ -51,4 +51,3 @@ app.include_router(
     prefix="/users",
     tags=["users"],
 )
-
