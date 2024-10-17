@@ -1,18 +1,29 @@
 {
-  "name": "front",
-  "version": "0.0.0",
+  "name": "squeare-planner",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "vue": "^3.4.15"
+    "@nuxt/image": "^1.8.1",
+    "@nuxt/ui": "^2.18.7",
+    "@nuxtjs/tailwindcss": "^6.12.1",
+    "@pinia/nuxt": "^0.5.5",
+    "autoprefixer": "^10.4.20",
+    "bulma": "^1.0.2",
+    "nuxt": "^3.13.0",
+    "pinia": "^2.2.4",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14",
+    "vue": "latest",
+    "vue-router": "latest"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.3",
-    "vite": "^5.0.11"
+    "sass": "^1.79.5"
   }
 }

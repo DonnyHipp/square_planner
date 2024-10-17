@@ -1,0 +1,143 @@
+
+
+$color-primary: #4A90E2;
+$color-primary-500: #007bfb;
+$color-secondary: #003366;
+$color-background: #f8f7fa;
+$color-text: #000000;
+$color-text100: #2e3c57;
+
+$color-accent: #A4C8E1;
+
+/*  Fonts */
+$base-font: "CoFoSans", helvetica, sans-serif;
+$base-font-size: 16px;
+
+/* Colors */
+$accept-garden: #5cc867;
+$error-fire: #ed584e;
+$error-after: #F76D6E;
+$option-dance: #fd770d;
+$option-ice: #70d0f4;
+$option-lime: #b6d20d;
+$option-flower: #4f08e8;
+$option-berrie: #e75ca3;
+$option-lima: #75b91f;
+$option-acai: #92278f;
+$option-sun: #f8cc4d;
+$option-drow: #2c73b4;
+$option-steel: #adacac;
+$primary-900: #111d3b;
+$primary-800: #003164;
+$primary-700: #004a97;
+$primary-600: #0469d2;
+$primary-500: #007bfb;
+$primary-400: #3395fc;
+$primary-300: #66b0fd;
+$primary-200: #99cafd;
+$primary-100: #cce5fe;
+$primary: #ebf4ff;
+
+$base-900: #282d3c;
+$base-850: #333;
+$base-825: #4d4d4d;
+$base-800: #414961;
+$base-700: #515b73;
+$base-600: #788095;
+$base-500: #8c94a8;
+$base-400: #bcc3d2;
+$base-300: #e2e7f3;
+$base-200: #ecf0f8;
+$base-100: #f4f6fb;
+$base-1001: #f9f9fa;
+$base: #fff;
+
+$black: #000;
+$primary-red: #ed4c4f;
+$primary-green: #1a9f29;
+$primary-beige: #fff3e1;
+$monochrome-dusk: #1a1b1d;
+$monochrome-stone: #929298;
+
+$grey-100: #f6f6f6;
+$grey-light: #d6dde9;
+$grey-middle: #aeaeae;
+$grey: #57697c;
+
+$pro-text: #9d9d9d;
+$pro-bg: #181818;
+$pro-bg-second: #20232d;
+$pro-light-bg: #202020;
+$pro-bright-bg: #2a2e3a;
+
+$blue-light: #6da4dd;
+$blue-lighten: #d6e2fa;
+$violet: #6337ff;
+$red-light: #ef4a4a;
+$purple: #ab52c6;
+$blue-middle: #0776ed;
+$blue-light-bg: #f0f8ff;
+
+/* Breakpoints */
+$breakpoints: (
+  mobile: 0,
+  s_tablet: 720px,
+  m_tablet: 920px,
+  tablet: 1023px,
+  s_laptop: 1200px,
+  desktop: 1359px,
+);
+
+// H E A D E R
+// Высота хедера
+$header-h: 130px;
+$header-h-m-tablet: 110px;
+$header-h-s-tablet: 72px;
+
+// Высота свёрнутого хедера
+$header-h-closed: 72px;
+$header-h-closed-m-tablet: 64px;
+
+// TapBar
+$tap-bar-h: 70px;
+$header-z-index: 100;
+$exp-notice-h: 52px;
+$aside-padding-tablet: 30px;
+$aside-padding-mobile: 16px;
+
+/* Modals padding */
+// BottomModalWrap
+$p-b-modal-x: 64px;
+$p-b-modal-top: 40px;
+$p-b-modal-bottom: 48px;
+$p-b-modal-x-s: $aside-padding-mobile;
+$p-b-modal-top-s: 38px;
+$p-b-modal-bottom-s: 45px;
+
+/* Modals padding end */
+
+/* Transitions */
+$default-transition: .3s;
+
+/* PDF */
+$pdf-height: 1120px;
+$pdf-width: 792px;
+$pdf-diff: 1.33;
+$pdf-footer-h: 120px * $pdf-diff;
+$pdf-header-h: 60px * $pdf-diff;
+$pdf-header-offset: 42px * $pdf-diff;
+
+/* Easing */
+$ease-in: cubic-bezier(.785, .135, .15, .86);
+$ease: cubic-bezier(.25, .46, .45, .94);
+$bounce: cubic-bezier(.09, 1.16, .34, 1.37);
+$apple-cubic: cubic-bezier(.165, .84, .44, 1);
+
+/* Adds */
+$z-index: 2147483647;
+$children-set: (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
+
+
+$border-radius: 30px;
+$btm-border-radius: 30px;
+$box-shadow:- 0px 0px 19px -2px rgba(0, 0, 0, 0.2);
