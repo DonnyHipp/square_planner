@@ -9,7 +9,8 @@ __pycache__/git rm -r --cached __pycache__
 __pycache__/
 *.py[cod]
 *$py.class
-
+.DS_store
+.idea
 
 *.so
 
@@ -123,3 +124,4 @@ cython_debug/
 /.idea/inspectionProfiles/profiles_settings.xml
 /.idea/misc.xml
 /.idea/square_planner.iml
+/.ruff_cache/
