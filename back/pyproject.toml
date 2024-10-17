@@ -23,6 +23,7 @@ pytest = "^8.0.2"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 python-multipart = "^0.0.9"
 fastapi-users = {extras = ["sqlalchemy"], version = "^13.0.0"}
+pre-commit = "^3.8.0"
 
 
 [build-system]
