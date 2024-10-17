@@ -1,0 +1,87 @@
+@import '../../node_modules/tailwindcss/base.css';
+@import '../../node_modules/tailwindcss/components.css';
+@import '../../node_modules/tailwindcss/utilities.css';
+
+//@include font("CoFoSans", "CoFoSans-Regular", normal);
+//@include font("CoFoSans", "CoFoSans-Medium", 500);
+//@include font("CoFoSans", "CoFoSans-Bold", bold);
+
+
+html {
+  font-size: 100%;
+  box-sizing: border-box;
+}
+body {
+  margin: 0px;
+  padding: 0px;
+  min-height: 100vh;
+}
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+body {
+  background-color: $color-background;
+  color: $color-text;
+}
+
+.blue-button,
+.white-button {
+  transition: color .3s;
+  cursor: pointer;
+}
+//
+//.blue-button {
+//  color: $primary-500;
+//
+//  @include hover {
+//    color: $primary-300;
+//  }
+//}
+
+//.white-button {
+//  color: $base;
+//
+//  @include hover {
+//    color: $base-500;
+//  }
+//}
+
+
+//.container {
+//  max-width: 1320px;
+//  margin: 0 auto;
+//
+//  @include respond-to(s_laptop) {
+//    padding: 0 $aside-padding-tablet;
+//  }
+//
+//  @include respond-to(mobile) {
+//    padding: 0 $aside-padding-mobile;
+//  }
+//}
+
+
+
+.button {
+  //background-color: $color-primary;
+  color: $color-text100;
+  padding-left:16px;
+  padding-right: 16px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+
+  &:hover {
+    color: $color-secondary;
+  }
+}
+.active-btn{
+  color:$color-primary-500;
+}
+//
+//is-primary
+//is-link
+//is-info
+//is-success
+//is-warning
+//is-danger
