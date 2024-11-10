@@ -1,15 +1,6 @@
+## Daily planner that focus on aims and kpis, and could track your life progress
 
-
-Django app with htmx based on PDCA cycle
-
-- enter kpis
-- enter glide
-- enter real kpi values
-- enter activities based on kpis
-  
-## PDCA приложение на Django
-
-**Описание**
+**Description**
 
 Это приложение на Django, в котором можно вводить таргеты и цели по kpi ( P part of PDCA Cycle ) 
 
