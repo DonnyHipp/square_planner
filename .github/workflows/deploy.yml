@@ -1,4 +1,4 @@
-name: Node CI
+name: Deploy to server
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker-compose build
+          docker compose build
 
       - name: Deploy to Server
         uses: easingthemes/ssh-deploy@main
