@@ -1,26 +1,17 @@
-FROM python:3.12-slim-bullseye as base3
+# Этап сборки
+FROM golang:1.21 as builder
 
-ENV PYTHONFAULTHANDLER=1 \
-    PYTHONUNBUFFERED=1 \
-    PYTHONHASHSEED=random \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=off \
-    PIP_DISABLE_PIP_VERSION_CHECK=on \
-    PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_VERSION=1.7.1 \
-    POETRY_NO_INTERACTION=1 \
-    POETRY_CACHE_DIR='/var/cache/pypoetry' \
-    PATH="$PATH:/root/.local/bin"
+# Установим рабочую директорию
+WORKDIR /app
 
-WORKDIR /back
-ENV PYTHONDONTWRITEBYTECODE=1\
-    PYTHONUNBUFFERED=1
+# Копируем go.mod и go.sum для кэширования зависимостей
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Копируем остальные файлы
 COPY . .
 
-RUN #pip install poetry
+# Собираем приложение
+RUN go build -v -o start_backend ./cmd/main.go
 
-RUN #poetry install $(test "$YOUR_ENV" == production && echo "--only=main") --no-interaction --no-ansi
-RUN pip install -r requirements.txt
-
-
-EXPOSE 8000
+CMD ["./start_backend"]

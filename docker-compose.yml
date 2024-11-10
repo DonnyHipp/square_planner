@@ -1,9 +1,5 @@
-version: '3.7'
-
 services:
-  db:
-    image: postgres:13.7-alpine
-
   backend:
-    depends_on:
-      - db
+    build: ./back
+    ports:
+      - "8080:8080"
