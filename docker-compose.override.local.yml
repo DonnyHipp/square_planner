@@ -43,16 +43,3 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       PGDATA: "/var/lib/postgresql/data:cached"
-
-  backend:
-    command: uvicorn src.main:app --reload
-    env_file:
-      - back/.env
-    volumes:
-      - ./back:/back:cached
-#    entrypoint: wait-for -t ${WAIT_FOR_TIMEOUT:-20} db:5432 -- /back/entrypoint.sh
-    build:
-      context: ./back
-    expose: [2000,8000]
-    ports:
-      - ${LOCAL_BACKEND_PORT:-8000}:8000
