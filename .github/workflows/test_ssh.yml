@@ -1,20 +1,14 @@
 name: test_ssh
 
 on:
-  workflow_dispatch:  # Позволяет запускать workflow вручную
+  workflow_dispatch:
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
-
     steps:
-    - name: Create SSH Key
-      run: |
-            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ./id_rsa
-            chmod 600 ./id_rsa  # Установите правильные права доступа к ключу
-    - name: Execute SSH Command
-      run: |
-        RESULT=$(ssh -i ./id_rsa ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} ls)
-        echo "Результат выполнения команды:"
-        echo "$RESULT"
+      - name: Execute SSH Command
+        run: |
+          RESULT=$(ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} ls)
+          echo "Результат выполнения команды:"
+          echo "$RESULT"
