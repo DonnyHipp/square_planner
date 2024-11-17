@@ -29,8 +29,8 @@ jobs:
 
       - name: Build Docker images
         env:
-          IMAGE_TAG: ${{vars.REPO_NAME}}:${{github.head_ref}}
-          CI_REGISTRY_BACKEND : ${{ vars.CR_REGISTRY }}
+          IMAGE_TAG: ${{vars.REPO_NAME}}:${{github.sha}}
+          CI_REGISTRY_BACKEND: ${{ vars.CR_REGISTRY }}
         run: |
           echo $CI_REGISTRY_BACKEND
           echo IMAGE_TAG
