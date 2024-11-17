@@ -58,8 +58,6 @@ jobs:
       - name: Copy docker-compose.yml to Remote Host
         run: |
           scp -i ./id_rsa -o StrictHostKeyChecking=no
-          export IMAGE_TAG='${{ env.IMAGE_TAG }}'
-          export CI_REGISTRY_BACKEND='${{ env.CI_REGISTRY_BACKEND }}'
           docker-compose.yml ${{ vars.REMOTE_USER }}@${{ vars.REMOTE_HOST }}:/home/${{ vars.REMOTE_USER }}/docker-compose.yml
 
       - name: Deploy Docker Stack
