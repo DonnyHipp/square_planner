@@ -25,12 +25,12 @@ jobs:
       - name: Add Remote Host to Known Hosts
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ env.REMOTE_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ vars.REMOTE_HOST }} >> ~/.ssh/known_hosts
 
       - name: Build Docker images
         env:
-          IMAGE_TAG: ${{env.REPO_NAME}}:${{github.head_ref}}
-          CI_REGISTRY_BACKEND : ${{ env.CR_REGISTRY }}
+          IMAGE_TAG: ${{vars.REPO_NAME}}:${{github.head_ref}}
+          CI_REGISTRY_BACKEND : ${{ vars.CR_REGISTRY }}
         run: |
           docker compose build
           echo $CI_REGISTRY_BACKEND
@@ -48,16 +48,16 @@ jobs:
         with:
           push: true
           context: .
-          tags: ${{env.REPO_NAME}}:${{github.head_ref}}
+          tags: ${{vars.REPO_NAME}}:${{github.head_ref}}
 
       - name: Deploy
         uses: kitconcept/docker-stack-deploy@v1.0.1
         with:
-            registry: ${{ env.CR_REGISTRY }}
+            registry: ${{ vars.CR_REGISTRY }}
             username: ${{ secrets.CR_KEY_ID }}
             password: ${{ secrets.CR_KEY_PASS }}
-            remote_host: ${{ env.REMOTE_HOST }}
-            remote_user: ${{ env.REMOTE_USER }}
+            remote_host: ${{ vars.REMOTE_HOST }}
+            remote_user: ${{ vars.REMOTE_USER }}
             remote_private_key: ${{ secrets.REMOTE_PRIVATE_KEY }}
             stack_file: "docker-compose.yml"
             stack_name: "sq"
