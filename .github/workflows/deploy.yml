@@ -25,6 +25,9 @@ jobs:
           ssh-keyscan -H ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
 
       - name: Build Docker images
+        env:
+          IMAGE_TAG: ${{env.REPO_NAME}}:${{github.head_ref}}
+          CI_REGISTRY_BACKEND : ${{ secrets.CR_REGISTRY }}
         run: docker compose build
 
       - name: Login to Docker Hub
@@ -36,6 +39,7 @@ jobs:
 
       - name: Push Docker images
         uses: docker/build-push-action@v5
+
         with:
           push: true
           context: .
