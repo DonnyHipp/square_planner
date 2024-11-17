@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - name: Check
-        run: echo ${{ env.REMOTE_HOST }}
+        run: echo ${{ vars.REMOTE_HOST }}
 
       - name: Checkout code
         uses: actions/checkout@v4
