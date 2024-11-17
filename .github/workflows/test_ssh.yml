@@ -1,20 +1,25 @@
 name: test_ssh
 
 on:
-  workflow_dispatch:  # Позволяет запускать workflow вручную
+  workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
 
     steps:
     - name: Create SSH Key
       run: |
-            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ./id_rsa
-            chmod 600 ./id_rsa  # Установите правильные права доступа к ключу
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ./id_rsa
+        chmod 600 ./id_rsa  # Set correct permissions for the key
+
+    - name: Add Remote Host to Known Hosts
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -H ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
+
     - name: Execute SSH Command
       run: |
-        RESULT=$(ssh -i id_rsa ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} ls)
+        RESULT=$(ssh -i ./id_rsa ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} ls)
         echo "Результат выполнения команды:"
         echo "$RESULT"
