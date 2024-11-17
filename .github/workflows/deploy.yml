@@ -33,7 +33,7 @@ jobs:
           CI_REGISTRY_BACKEND: ${{ vars.CR_REGISTRY }}
         run: |
           echo $CI_REGISTRY_BACKEND
-          echo IMAGE_TAG
+          echo $IMAGE_TAG
           docker compose build
 
       - name: Login to Docker Hub

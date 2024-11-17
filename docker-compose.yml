@@ -1,6 +1,6 @@
 services:
   backend:
     build: ./back
-    image: ${CI_REGISTRY_BACKEND}:${IMAGE_TAG}
+    image: ${CI_REGISTRY_BACKEND}/${IMAGE_TAG}
     ports:
       - "8080:8080"
