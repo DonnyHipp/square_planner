@@ -32,6 +32,5 @@ jobs:
           ssh -i ./id_rsa -o StrictHostKeyChecking=no ${{ vars.REMOTE_USER }}@${{ vars.REMOTE_HOST }} "
             export IMAGE_TAG='${{ env.IMAGE_TAG }}' &&
             export CI_REGISTRY_BACKEND='${{ env.CI_REGISTRY_BACKEND }}' &&
-            ls &&  # Замените эту строку на нужную вам команду
             docker stack deploy -c /home/${{ vars.REMOTE_USER }}/docker-compose.yml --with-registry-auth --resolve-image=always square_planner
           "
