@@ -6,7 +6,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    env:
+      IMAGE_TAG: ${{vars.REPO_NAME}}:${{github.sha}}
+      CI_REGISTRY_BACKEND: ${{ vars.CR_REGISTRY }}
     steps:
       - name: Check
         run: echo ${{ vars.REMOTE_HOST }}
@@ -28,9 +30,6 @@ jobs:
           ssh-keyscan -H ${{ vars.REMOTE_HOST }} >> ~/.ssh/known_hosts
 
       - name: Build Docker images
-        env:
-          IMAGE_TAG: ${{vars.REPO_NAME}}:${{github.sha}}
-          CI_REGISTRY_BACKEND: ${{ vars.CR_REGISTRY }}
         run: |
           echo $CI_REGISTRY_BACKEND
           echo $IMAGE_TAG
