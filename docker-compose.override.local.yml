@@ -43,3 +43,8 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       PGDATA: "/var/lib/postgresql/data:cached"
+
+  backend:
+    build: ./back
+    ports:
+      - "8080:8080"
