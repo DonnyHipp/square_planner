@@ -59,6 +59,10 @@ jobs:
         run: |
           scp -i ./id_rsa -o StrictHostKeyChecking=no docker-compose.yml ${{ vars.REMOTE_USER }}@${{ vars.REMOTE_HOST }}:/home/${{ vars.REMOTE_USER }}/docker-compose.yml
 
+      - name: Copy nginx config to Remote Host
+        run: |
+          scp -i ./id_rsa -o StrictHostKeyChecking=no -r ./nginx ${{ vars.REMOTE_USER }}@${{ vars.REMOTE_HOST }}:/home/${{ vars.REMOTE_USER }}/nginx
+
       - name: Deploy Docker Stack
         run: |
           ssh -i ./id_rsa -o StrictHostKeyChecking=no ${{ vars.REMOTE_USER }}@${{ vars.REMOTE_HOST }} "
