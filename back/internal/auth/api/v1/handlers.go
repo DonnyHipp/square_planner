@@ -9,5 +9,5 @@ func LoginHandler(c *gin.Context) {
 }
 
 func RegisterHandler(c *gin.Context) {
-	c.JSON(200, gin.H{"message": "Успешно зарегано"})
+	c.JSON(200, gin.H{"message": "Успешно зарегано Янчик привет!"})
 }
