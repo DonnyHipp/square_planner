@@ -44,12 +44,7 @@ jobs:
           password: ${{ secrets.CR_KEY_PASS }}
 
       - name: Push Docker images
-        uses: docker/build-push-action@v5
-
-        with:
-          push: true
-          context: .
-          tags: ${{vars.REPO_NAME}}:${{github.head_ref}}
+        run: docker compose push
 
       - name: Deploy
         uses: kitconcept/docker-stack-deploy@v1.0.1
