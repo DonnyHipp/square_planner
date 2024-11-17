@@ -57,12 +57,15 @@ jobs:
 
       - name: Copy docker-compose.yml to Remote Host
         run: |
-            scp -i ./id_rsa -o StrictHostKeyChecking=no docker-compose.yml ${{ vars.REMOTE_USER }}@${{ vars.REMOTE_HOST }}:/home/${{ vars.REMOTE_USER }}/docker-compose.yml
+          scp -i ./id_rsa -o StrictHostKeyChecking=no
+          export IMAGE_TAG='${{ env.IMAGE_TAG }}'
+          export CI_REGISTRY_BACKEND='${{ env.CI_REGISTRY_BACKEND }}'
+          docker-compose.yml ${{ vars.REMOTE_USER }}@${{ vars.REMOTE_HOST }}:/home/${{ vars.REMOTE_USER }}/docker-compose.yml
 
       - name: Deploy Docker Stack
         run: |
             ssh -i ./id_rsa -o StrictHostKeyChecking=no ${{ vars.REMOTE_USER }}@${{ vars.REMOTE_HOST }}
-            docker stack deploy -c /home/${{ vars.REMOTE_USER }}/docker-compose.yml square_planner
+            docker stack deploy -c /home/${{ vars.REMOTE_USER }}/docker-compose.yml --with-registry-auth --resolve-image=always square_planner
 
 #      - name: Deploy Docker Stack
 #        uses: kitconcept/docker-stack-deploy@v1.0.1
