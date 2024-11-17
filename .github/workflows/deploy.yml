@@ -63,6 +63,6 @@ jobs:
           password: ${{ secrets.CR_KEY_PASS }}
           remote_host: ${{ vars.REMOTE_HOST }}
           remote_user: ${{ vars.REMOTE_USER }}
-          remote_private_key: cat ./id_rsa
+          remote_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           stack_file: "docker-compose.yml"
           stack_name: "square_planner"
