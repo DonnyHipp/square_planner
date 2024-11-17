@@ -42,6 +42,9 @@ jobs:
       CI_REGISTRY_BACKEND: ${{ vars.CR_REGISTRY }}
     needs: build
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Create SSH Key
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ./id_rsa
