@@ -6,20 +6,28 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
+    env:
+      IMAGE_TAG: ${{ vars.REPO_NAME }}:${{ github.sha }}
+      CI_REGISTRY_BACKEND: ${{ vars.CR_REGISTRY }}
     steps:
-    - name: Create SSH Key
-      run: |
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ./id_rsa
-        chmod 600 ./id_rsa  # Set correct permissions for the key
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Add Remote Host to Known Hosts
-      run: |
-        mkdir -p ~/.ssh
-        ssh-keyscan -H ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
+      - name: Create SSH Key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ./id_rsa
+          chmod 600 ./id_rsa
 
-    - name: Execute SSH Command
-      run: |
-        RESULT=$(ssh -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} ls)
-        echo "Результат выполнения команды:"
-        echo "$RESULT"
+      - name: Add Remote Host to Known Hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ vars.REMOTE_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Copy docker-compose.yml to Remote Host
+        run: |
+          scp -i ./id_rsa -o StrictHostKeyChecking=no docker-compose.yml ${{ vars.REMOTE_USER }}@${{ vars.REMOTE_HOST }}:/home/${{ vars.REMOTE_USER }}/docker-compose.yml
+
+      - name: Deploy Docker Stack
+        run: |
+          ssh -i ./id_rsa -o StrictHostKeyChecking=no ${{ vars.REMOTE_USER }}@${{ vars.REMOTE_HOST }}
+          docker stack deploy -c /home/${{ vars.REMOTE_USER }}/docker-compose.yml square_planner

@@ -55,14 +55,23 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ vars.REMOTE_HOST }} >> ~/.ssh/known_hosts
 
+      - name: Copy docker-compose.yml to Remote Host
+        run: |
+            scp -i ./id_rsa -o StrictHostKeyChecking=no docker-compose.yml ${{ vars.REMOTE_USER }}@${{ vars.REMOTE_HOST }}:/home/${{ vars.REMOTE_USER }}/docker-compose.yml
+
       - name: Deploy Docker Stack
-        uses: kitconcept/docker-stack-deploy@v1.0.1
-        with:
-          registry: ${{ vars.CR_REGISTRY }}
-          username: ${{ secrets.CR_KEY_ID }}
-          password: ${{ secrets.CR_KEY_PASS }}
-          remote_host: ${{ vars.REMOTE_HOST }}
-          remote_user: ${{ vars.REMOTE_USER }}
-          remote_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
-          stack_file: "docker-compose.yml"
-          stack_name: "square_planner"
+        run: |
+            ssh -i ./id_rsa -o StrictHostKeyChecking=no ${{ vars.REMOTE_USER }}@${{ vars.REMOTE_HOST }}
+            docker stack deploy -c /home/${{ vars.REMOTE_USER }}/docker-compose.yml square_planner
+
+#      - name: Deploy Docker Stack
+#        uses: kitconcept/docker-stack-deploy@v1.0.1
+#        with:
+#          registry: ${{ vars.CR_REGISTRY }}
+#          username: ${{ secrets.CR_KEY_ID }}
+#          password: ${{ secrets.CR_KEY_PASS }}
+#          remote_host: ${{ vars.REMOTE_HOST }}
+#          remote_user: ${{ vars.REMOTE_USER }}
+#          remote_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+#          stack_file: "docker-compose.yml"
+#          stack_name: "square_planner"
