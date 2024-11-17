@@ -30,7 +30,7 @@ jobs:
       - name: Deploy Docker Stack
         run: |
           ssh -i ./id_rsa -o StrictHostKeyChecking=no ${{ vars.REMOTE_USER }}@${{ vars.REMOTE_HOST }}
-          export IMAGE_TAG='${{ env.IMAGE_TAG }}'
-          export CI_REGISTRY_BACKEND='${{ env.CI_REGISTRY_BACKEND }}'
-          echo | ls
+          export IMAGE_TAG='${{ env.IMAGE_TAG }}' &&
+          export CI_REGISTRY_BACKEND='${{ env.CI_REGISTRY_BACKEND }}' &&
+          echo | ls &&
           docker stack deploy -c docker-compose.yml --with-registry-auth --resolve-image=always square_planner
