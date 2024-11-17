@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     env:
-      IMAGE_TAG: ${{vars.REPO_NAME}}:${{github.sha}}
+      IMAGE_TAG: ${{ vars.REPO_NAME }}:${{ github.sha }}
       CI_REGISTRY_BACKEND: ${{ vars.CR_REGISTRY }}
     steps:
       - name: Check
@@ -45,22 +45,18 @@ jobs:
       - name: Push Docker images
         run: docker compose push
 
-      - name: Deploy
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build  # Зависимость от job 'build'
+    steps:
+      - name: Deploy Docker Stack
         uses: kitconcept/docker-stack-deploy@v1.0.1
         with:
-            registry: ${{ vars.CR_REGISTRY }}
-            username: ${{ secrets.CR_KEY_ID }}
-            password: ${{ secrets.CR_KEY_PASS }}
-            remote_host: ${{ vars.REMOTE_HOST }}
-            remote_user: ${{ vars.REMOTE_USER }}
-            remote_private_key: ${{ secrets.REMOTE_PRIVATE_KEY }}
-            stack_file: "docker-compose.yml"
-            stack_name: "sq"
-
-
-
-#      - name: Deploy Docker Stack on Remote Server
-#        run: |
-#          ssh -i ./id_rsa ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }} << 'EOF'
-#            docker stack deploy -c /path/to/your/docker-compose.yml your_stack_name
-#          EOF
+          registry: ${{ vars.CR_REGISTRY }}
+          username: ${{ secrets.CR_KEY_ID }}
+          password: ${{ secrets.CR_KEY_PASS }}
+          remote_host: ${{ vars.REMOTE_HOST }}
+          remote_user: ${{ vars.REMOTE_USER }}
+          remote_private_key: ${{ secrets.REMOTE_PRIVATE_KEY }}
+          stack_file: "docker-compose.yml"
+          stack_name: "square_planner"
